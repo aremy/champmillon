@@ -1,0 +1,37 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { formatDay, formatMonth, formatWeekday } from "@/lib/content";
+
+type Props = { items: CollectionEntry<"actualites">[] };
+const { items } = Astro.props;
+---
+
+{
+  items.length === 0 ? (
+    <p class="text-gris">Aucun rendez-vous annoncé pour le moment.</p>
+  ) : (
+    <ol class="space-y-3">
+      {items.map(item => {
+        const ev = item.data.evenement!;
+        return (
+          <li>
+            <a href={`/actualites/${item.id}/`} class="carte hover:border-sable group flex items-center gap-4 p-3 pr-4">
+              <span class="bg-riviere flex w-16 shrink-0 flex-col items-center rounded-xl py-2 text-white">
+                <span class="font-titre text-2xl leading-none font-semibold">{formatDay(ev.date)}</span>
+                <span class="text-cognac-clair mt-1 text-xs font-semibold tracking-wider uppercase">{formatMonth(ev.date)}</span>
+              </span>
+              <span class="min-w-0">
+                <span class="block leading-snug font-semibold group-hover:underline">{item.data.titre}</span>
+                <span class="text-gris block text-sm first-letter:uppercase">
+                  {formatWeekday(ev.date)}
+                  {ev.heure && ` · ${ev.heure}`}
+                  {ev.lieu && ` · ${ev.lieu}`}
+                </span>
+              </span>
+            </a>
+          </li>
+        );
+      })}
+    </ol>
+  )
+}

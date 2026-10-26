@@ -1,0 +1,57 @@
+---
+import { Image } from "astro:assets";
+import Base from "@/layouts/Base.astro";
+import PageHeader from "@/components/PageHeader.astro";
+import Icon from "@/components/Icon.astro";
+import { getJournaux, getSite, hasWebVersion } from "@/lib/content";
+
+const journaux = await getJournaux();
+const site = await getSite();
+---
+
+<Base titre="Le journal" description={`Le journal annuel de la commune de ${site.nom}, à lire en ligne ou à télécharger.`}>
+  <PageHeader
+    titre="Le journal communal"
+    description="Chaque année, le journal revient sur les projets de la commune, la vie des associations et les moments partagés. À lire en ligne ou à télécharger."
+  />
+  <section class="conteneur mt-14">
+    <ul class="grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        journaux.map(j => (
+          <li class="flex flex-col">
+            <div class="bg-calcaire/60 flex justify-center rounded-2xl px-8 py-10">
+              {j.data.couverture ? (
+                <Image
+                  src={j.data.couverture}
+                  alt={`Couverture du journal ${j.data.annee}`}
+                  width={360}
+                  class="w-44 rounded-md shadow-xl ring-1 ring-black/5"
+                />
+              ) : (
+                <div class="bg-riviere flex aspect-[3/4] w-44 flex-col justify-between rounded-md p-4 text-white shadow-xl">
+                  <span class="text-xs tracking-widest uppercase">{site.nom}</span>
+                  <span class="font-titre text-3xl leading-tight">Le journal {j.data.annee}</span>
+                </div>
+              )}
+            </div>
+            <p class="surtitre mt-5">Édition {j.data.annee}</p>
+            <h2 class="mt-1 text-2xl font-semibold">{j.data.titre}</h2>
+            <p class="text-gris mt-2 flex-1">{j.data.resume}</p>
+            <div class="mt-4 flex flex-wrap gap-x-5 gap-y-2">
+              {hasWebVersion(j) && (
+                <a class="lien" href={`/journal/${j.id}/`}>
+                  Lire en ligne
+                </a>
+              )}
+              {j.data.pdf && (
+                <a class="lien inline-flex items-center gap-1.5" href={j.data.pdf} download>
+                  <Icon name="telecharger" size={18} /> PDF
+                </a>
+              )}
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>

@@ -1,0 +1,45 @@
+# Réglages généraux du site.
+# Modifiez le texte après les deux-points. Gardez les espaces en début de ligne.
+
+nom: Champmillon
+slogan: Un village de Charente, entre vignes et fleuve
+territoire: Charente · Nouvelle-Aquitaine
+description: Site de la commune de Champmillon (Charente) - mairie, démarches, actualités, journal communal et vie du village.
+
+mairie:
+  adresse: 847 route de la Charente, 16290 Champmillon
+  telephone: 05 45 96 91 06
+  email: mairie.champmillon@wanadoo.fr
+  horaires:
+    - jour: Mardi
+      heures: 14 h - 17 h
+    - jour: Vendredi
+      heures: 14 h - 17 h
+  note_horaires: Horaires à confirmer - en cas de doute, appelez avant de vous déplacer.
+
+# Menu principal, dans l'ordre d'affichage.
+# Pour ajouter une page : créez le fichier dans « pages », puis ajoutez une ligne ici.
+menu:
+  - titre: La mairie
+    lien: /mairie/
+  - titre: Démarches
+    lien: /demarches/
+  - titre: Le village
+    lien: /village/
+  - titre: Actualités
+    lien: /actualites/
+  - titre: Le journal
+    lien: /journal/
+
+# Liens affichés en bas de chaque page.
+liens_utiles:
+  - titre: Service-Public.fr - vos démarches
+    lien: https://www.service-public.fr/
+  - titre: Grand Cognac, notre agglomération
+    lien: https://www.grand-cognac.fr/
+  - titre: Préfecture de la Charente
+    lien: https://www.charente.gouv.fr/
+  - titre: Vigilance météo et crues
+    lien: https://vigilance.meteofrance.fr/fr/charente
+  - titre: Alertes et annonces de la commune
+    lien: /alertes/

@@ -1,0 +1,287 @@
+# Pages CMS configuration - https://pagescms.org
+# Contributors sign in at https://app.pagescms.org with their GitHub account,
+# open this repository and edit content through forms. Each save is a commit;
+# the GitHub Action then rebuilds the site (about 2 minutes).
+
+media:
+  - name: images
+    label: Photos
+    input: src/assets/images
+    output: ../../assets/images
+    extensions: [jpg, jpeg, png, webp]
+  - name: documents
+    label: Documents PDF
+    input: public/journal
+    output: /journal
+    extensions: [pdf]
+
+content:
+  # ---------------------------------------------------------------- Alertes
+  - name: alertes
+    label: Alertes et annonces importantes
+    type: collection
+    path: src/content/alertes
+    format: yaml-frontmatter
+    filename: "{year}-{month}-{primary}.md"
+    view:
+      primary: titre
+      fields: [titre, niveau, debut, fin]
+      sort: [debut]
+      default:
+        sort: debut
+        order: desc
+    fields:
+      - name: titre
+        label: Titre
+        type: string
+        required: true
+      - name: niveau
+        label: Niveau
+        type: select
+        required: true
+        options:
+          values:
+            - { name: info, label: "Information (vert)" }
+            - { name: vigilance, label: "Vigilance (orange)" }
+            - { name: urgent, label: "Urgent (rouge)" }
+      - name: resume
+        label: Résumé (une phrase, affichée dans le bandeau en haut du site)
+        type: string
+        required: true
+      - name: debut
+        label: Afficher à partir du
+        type: date
+        required: true
+        options: { format: yyyy-MM-dd }
+      - name: fin
+        label: Afficher jusqu'au (inclus)
+        description: Après cette date, l'alerte disparaît du site et reste dans l'historique.
+        type: date
+        required: true
+        options: { format: yyyy-MM-dd }
+      - name: body
+        label: Détails et consignes
+        type: rich-text
+        options: { format: markdown, media: images }
+
+  # ---------------------------------------------------------------- Actualités
+  - name: actualites
+    label: Actualités et rendez-vous
+    type: collection
+    path: src/content/actualites
+    format: yaml-frontmatter
+    filename: "{year}-{month}-{day}-{primary}.md"
+    view:
+      primary: titre
+      fields: [titre, categorie, date]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: titre
+        label: Titre
+        type: string
+        required: true
+      - name: date
+        label: Date de publication
+        type: date
+        required: true
+        options: { format: yyyy-MM-dd }
+      - name: resume
+        label: Résumé (2 lignes, affiché dans les listes)
+        type: text
+        required: true
+      - name: categorie
+        label: Catégorie
+        type: select
+        options:
+          values: [Mairie, Vie du village, Travaux, Associations, École, Environnement]
+      - name: photo
+        label: Photo (facultative)
+        type: image
+        options: { media: images }
+      - name: photo_legende
+        label: Légende et crédit de la photo
+        type: string
+      - name: evenement
+        label: Rendez-vous (facultatif - apparaît dans l'agenda)
+        type: object
+        fields:
+          - name: date
+            label: Date de l'événement
+            type: date
+            options: { format: yyyy-MM-dd }
+          - name: heure
+            label: Heure (ex. 20 h 30)
+            type: string
+          - name: lieu
+            label: Lieu
+            type: string
+      - name: brouillon
+        label: Brouillon (non publié)
+        type: boolean
+      - name: body
+        label: Texte
+        type: rich-text
+        options: { format: markdown, media: images }
+
+  # ---------------------------------------------------------------- Journal
+  - name: journal
+    label: Le journal annuel
+    type: collection
+    path: src/content/journal
+    format: yaml-frontmatter
+    filename: "{fields.annee}.md"
+    view:
+      primary: titre
+      fields: [annee, titre]
+      default:
+        sort: annee
+        order: desc
+    fields:
+      - name: annee
+        label: Année
+        type: number
+        required: true
+      - name: titre
+        label: Titre de l'édition
+        type: string
+        required: true
+      - name: resume
+        label: Résumé
+        type: text
+        required: true
+      - name: couverture
+        label: Image de couverture (facultative)
+        type: image
+        options: { media: images }
+      - name: pdf
+        label: Fichier PDF
+        type: file
+        options: { media: documents }
+      - name: body
+        label: Version en ligne (facultative - laisser vide pour un PDF seul)
+        type: rich-text
+        options: { format: markdown, media: images }
+
+  # ---------------------------------------------------------------- Pages
+  - name: pages
+    label: Pages du site
+    description: "Le nom du fichier devient l'adresse de la page (ex. « services » → /services/). Pensez à l'ajouter au menu dans Réglages du site. Chaque titre « ## » apparaît dans le sommaire « Sur cette page »."
+    type: collection
+    path: src/content/pages
+    format: yaml-frontmatter
+    filename:
+      template: "{primary}.md"
+      field: create
+    view:
+      primary: titre
+      fields: [titre, description]
+    fields:
+      - name: titre
+        label: Titre
+        type: string
+        required: true
+      - name: description
+        label: Description (sous le titre et pour les moteurs de recherche)
+        type: text
+        required: true
+      - name: photo
+        label: Photo de bandeau (facultative)
+        type: image
+        options: { media: images }
+      - name: photo_legende
+        label: Légende et crédit de la photo
+        type: string
+      - name: body
+        label: Contenu
+        type: rich-text
+        options: { format: markdown, media: images }
+
+  # ---------------------------------------------------------------- Accueil
+  - name: accueil
+    label: Page d'accueil
+    type: file
+    path: src/content/reglages/accueil.yaml
+    format: yaml
+    fields:
+      - name: titre
+        label: Grand titre
+        type: string
+      - name: texte
+        label: Texte d'introduction
+        type: text
+      - name: photo
+        label: Photo principale
+        type: image
+        options: { media: images }
+      - name: photo_legende
+        label: Légende et crédit de la photo
+        type: string
+      - name: acces_rapides
+        label: Tuiles d'accès rapide
+        type: object
+        list: { min: 2, max: 6 }
+        fields:
+          - { name: titre, label: Titre, type: string }
+          - { name: texte, label: Sous-titre, type: string }
+          - { name: lien, label: "Lien (ex. /mairie/)", type: string }
+          - name: icone
+            label: Icône
+            type: select
+            options:
+              values: [mairie, document, journal, actualites, calendrier, telephone, email, horloge, lieu, dechets, ecole, salle, nature, alerte, info]
+      - name: decouvrir
+        label: Bloc « Découvrir »
+        type: object
+        fields:
+          - { name: titre, label: Titre, type: string }
+          - { name: texte, label: Texte, type: text }
+          - name: photos
+            label: Photos (3)
+            type: object
+            list: { max: 3 }
+            fields:
+              - { name: photo, label: Photo, type: image, options: { media: images } }
+              - { name: legende, label: Légende, type: string }
+
+  # ---------------------------------------------------------------- Réglages
+  - name: site
+    label: Réglages du site (menu, mairie, horaires)
+    type: file
+    path: src/content/reglages/site.yaml
+    format: yaml
+    fields:
+      - { name: nom, label: Nom de la commune, type: string }
+      - { name: slogan, label: Slogan, type: string }
+      - { name: territoire, label: "Territoire (sous le nom)", type: string }
+      - { name: description, label: Description pour les moteurs de recherche, type: text }
+      - name: mairie
+        label: Mairie
+        type: object
+        fields:
+          - { name: adresse, label: Adresse, type: string }
+          - { name: telephone, label: Téléphone, type: string }
+          - { name: email, label: Courriel, type: string }
+          - name: horaires
+            label: Horaires d'ouverture
+            type: object
+            list: true
+            fields:
+              - { name: jour, label: Jour, type: string }
+              - { name: heures, label: "Heures (ex. 14 h - 17 h)", type: string }
+          - { name: note_horaires, label: Remarque sur les horaires, type: string }
+      - name: menu
+        label: Menu principal
+        type: object
+        list: true
+        fields:
+          - { name: titre, label: Libellé, type: string }
+          - { name: lien, label: "Lien (ex. /mairie/)", type: string }
+      - name: liens_utiles
+        label: Liens utiles (bas de page)
+        type: object
+        list: true
+        fields:
+          - { name: titre, label: Libellé, type: string }
+          - { name: lien, label: Lien, type: string }

@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# original photo library (too large for the repo; selected photos live in src/assets/images)
+/photos/

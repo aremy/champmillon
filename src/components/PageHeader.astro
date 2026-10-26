@@ -1,0 +1,33 @@
+---
+/** Title band for inner pages, with an optional photo below it. */
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+type Props = {
+  titre: string;
+  description?: string;
+  photo?: ImageMetadata;
+  legende?: string;
+};
+const { titre, description, photo, legende } = Astro.props;
+---
+
+<div class="conteneur pt-10">
+  <h1 class="max-w-3xl text-4xl font-semibold sm:text-5xl">{titre}</h1>
+  {description && <p class="text-gris mt-3 max-w-2xl text-lg">{description}</p>}
+  {
+    photo && (
+      <figure class="mt-8">
+        <Image
+          src={photo}
+          alt=""
+          widths={[800, 1400, 2000]}
+          sizes="(min-width: 1152px) 1104px, 100vw"
+          loading="eager"
+          class="aspect-[21/9] w-full rounded-2xl object-cover"
+        />
+        {legende && <figcaption class="text-gris mt-2 text-sm">{legende}</figcaption>}
+      </figure>
+    )
+  }
+</div>

@@ -1,0 +1,45 @@
+---
+import { getSite } from "@/lib/content";
+
+const site = await getSite();
+const { mairie } = site;
+const tel = mairie.telephone.replace(/\s/g, "");
+---
+
+<footer class="bg-riviere-fonce mt-20 text-white">
+  <div class="conteneur grid gap-10 py-12 md:grid-cols-2">
+    <div>
+      <h2 class="font-titre text-xl font-semibold text-white">Mairie de {site.nom}</h2>
+      <p class="mt-3">{mairie.adresse}</p>
+      <p class="mt-1">
+        <a class="underline underline-offset-4" href={`tel:${tel}`}>{mairie.telephone}</a>
+        <span aria-hidden="true"> · </span>
+        <a class="break-all underline underline-offset-4" href={`mailto:${mairie.email}`}>{mairie.email}</a>
+      </p>
+      <p class="mt-3">
+        Accueil : {mairie.horaires.map(h => `${h.jour.toLowerCase()} ${h.heures}`).join(", ")}
+      </p>
+    </div>
+    <div>
+      <h2 class="font-titre text-xl font-semibold text-white">Liens utiles</h2>
+      <ul class="mt-3 space-y-2">
+        {
+          site.liens_utiles.map(l => (
+            <li>
+              <a class="underline underline-offset-4" href={l.lien}>{l.titre}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-white/20">
+    <div class="conteneur flex flex-wrap justify-between gap-x-6 gap-y-2 py-5 text-sm">
+      <p>© {new Date().getFullYear()} Commune de {site.nom}</p>
+      <p class="flex gap-4">
+        <a class="underline underline-offset-4" href="/mentions-legales/">Mentions légales</a>
+        <a class="underline underline-offset-4" href="/rss.xml">Flux RSS</a>
+      </p>
+    </div>
+  </div>
+</footer>

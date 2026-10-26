@@ -1,0 +1,106 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@import "@fontsource-variable/figtree";
+@import "@fontsource-variable/source-sans-3";
+
+/*
+ * Palette drawn from the village: limestone, river, vines and Cognac.
+ * Change a colour here and the whole site follows.
+ */
+@theme {
+  --color-pierre: #f7f2e8;       /* page background: limestone */
+  --color-calcaire: #ece3d0;     /* soft bands, card borders */
+  --color-sable: #dccfb4;
+  --color-encre: #24302b;        /* main text */
+  --color-gris: #5c665f;         /* secondary text */
+  --color-riviere: #1f4a3d;      /* deep green: header, footer, buttons */
+  --color-riviere-fonce: #143229;
+  --color-vigne: #6f8f4e;
+  --color-cognac: #b5702a;       /* accent */
+  --color-cognac-clair: #e2b277;
+  --color-cognac-fonce: #8a5216; /* accent on light background (readable) */
+  --color-alerte: #a3261c;
+
+  --font-titre: "Figtree Variable", system-ui, sans-serif;
+  --font-texte: "Source Sans 3 Variable", system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-pierre font-texte text-encre text-[1.0625rem] leading-relaxed antialiased;
+  }
+  h1, h2, h3 {
+    @apply font-titre text-riviere-fonce tracking-tight;
+  }
+  :focus-visible {
+    @apply outline-cognac outline-2 outline-offset-2;
+  }
+}
+
+@layer components {
+  .conteneur {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6;
+  }
+  .surtitre {
+    @apply text-cognac-fonce text-sm font-semibold tracking-[0.14em] uppercase;
+  }
+  .bouton {
+    @apply bg-riviere hover:bg-riviere-fonce inline-flex items-center gap-2 rounded-full px-5 py-2.5 font-semibold text-white transition-colors;
+  }
+  .bouton-clair {
+    @apply text-riviere-fonce inline-flex items-center gap-2 rounded-full bg-white/90 px-5 py-2.5 font-semibold transition-colors hover:bg-white;
+  }
+  .lien {
+    @apply text-riviere decoration-cognac/60 hover:decoration-cognac font-semibold underline decoration-2 underline-offset-4;
+  }
+  .carte {
+    @apply border-calcaire rounded-2xl border bg-white shadow-[0_1px_2px_rgb(36_48_43/0.04),0_8px_24px_-12px_rgb(36_48_43/0.12)];
+  }
+
+  /* Text written in Markdown by contributors */
+  .texte {
+    @apply prose prose-lg max-w-none;
+    --tw-prose-body: var(--color-encre);
+    --tw-prose-headings: var(--color-riviere-fonce);
+    --tw-prose-links: var(--color-riviere);
+    --tw-prose-bold: var(--color-encre);
+    --tw-prose-bullets: var(--color-cognac);
+    --tw-prose-counters: var(--color-cognac-fonce);
+    --tw-prose-quotes: var(--color-riviere-fonce);
+    --tw-prose-quote-borders: var(--color-cognac);
+    --tw-prose-hr: var(--color-calcaire);
+    --tw-prose-th-borders: var(--color-sable);
+    --tw-prose-td-borders: var(--color-calcaire);
+    --tw-prose-captions: var(--color-gris);
+  }
+  .texte :where(h2) {
+    @apply font-titre mt-12 scroll-mt-6 font-semibold;
+  }
+  .texte :where(h3) {
+    @apply font-titre font-semibold;
+  }
+  .texte :where(a) {
+    @apply decoration-cognac/60 hover:decoration-cognac decoration-2 underline-offset-4;
+  }
+  .texte :where(img) {
+    @apply rounded-xl;
+  }
+  .texte :where(blockquote) {
+    @apply bg-calcaire/50 rounded-r-xl py-1 font-normal not-italic;
+  }
+  .texte :where(blockquote p)::before,
+  .texte :where(blockquote p)::after {
+    content: none;
+  }
+  .texte :where(table) {
+    @apply text-base;
+  }
+}
+
+@media print {
+  header, footer, .no-print { display: none !important; }
+}

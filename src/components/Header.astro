@@ -1,0 +1,39 @@
+---
+import Logo from "./Logo.astro";
+import { getSite } from "@/lib/content";
+
+const site = await getSite();
+const current = Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ""), "") || "/";
+const isActive = (lien: string) => lien !== "/" && current.startsWith(lien.replace(/\/?$/, "/"));
+---
+
+<header class="bg-pierre border-calcaire border-b">
+  <div class="conteneur flex flex-col gap-3 py-3 md:flex-row md:items-center md:justify-between">
+    <a href="/" class="flex items-center gap-3 self-start">
+      <Logo class="h-12 w-auto shrink-0" width={160} />
+      <span class="leading-tight">
+        <span class="font-titre text-riviere-fonce block text-xl font-semibold">{site.nom}</span>
+        <span class="text-gris block text-sm">{site.territoire}</span>
+      </span>
+    </a>
+
+    <!-- Short menu: shown in full on every screen size, no burger button -->
+    <nav aria-label="Menu principal">
+      <ul class="-mx-2 flex flex-wrap gap-1">
+        {
+          site.menu.map(item => (
+            <li>
+              <a
+                href={item.lien}
+                aria-current={isActive(item.lien) ? "page" : undefined}
+                class="hover:bg-calcaire aria-[current=page]:bg-riviere block rounded-full px-3 py-2 font-semibold aria-[current=page]:text-white"
+              >
+                {item.titre}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>

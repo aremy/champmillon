@@ -1,0 +1,10 @@
+---
+/** The commune's logo (src/assets/logo.png): vine, lavoir de la Pille and église Saint-Vincent. */
+import { Image } from "astro:assets";
+import logo from "@/assets/logo.png";
+
+type Props = { class?: string; width?: number };
+const { class: className, width = 200 } = Astro.props;
+---
+
+<Image src={logo} alt="" width={width} class={className} />

@@ -1,0 +1,65 @@
+---
+/** Every Markdown file in src/content/pages/ becomes a page: "mairie.md" → /mairie/ */
+import { getCollection, render } from "astro:content";
+import Base from "@/layouts/Base.astro";
+import PageHeader from "@/components/PageHeader.astro";
+
+export async function getStaticPaths() {
+  const pages = await getCollection("pages");
+  return pages.map(page => ({ params: { slug: page.id }, props: { page } }));
+}
+
+const { page } = Astro.props;
+const { Content, headings } = await render(page);
+// Long pages get a table of contents built from their "##" titles:
+// at the top on phones, floating on the right on large screens.
+const sections = headings.filter(h => h.depth === 2);
+const withToc = sections.length >= 4;
+---
+
+<Base titre={page.data.titre} description={page.data.description}>
+  <PageHeader titre={page.data.titre} description={page.data.description} photo={page.data.photo} legende={page.data.photo_legende} />
+  <div class:list={["conteneur mt-10", withToc && "lg:grid lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-12"]}>
+    {
+      withToc && (
+        <nav aria-labelledby="sommaire" class="bg-calcaire/60 mb-10 rounded-2xl p-5 lg:order-2 lg:mb-0 lg:self-start lg:sticky lg:top-6 lg:bg-transparent lg:p-0">
+          <h2 id="sommaire" class="font-texte text-base font-semibold">Sur cette page</h2>
+          <ul class="mt-3 flex flex-wrap gap-2 lg:flex-col lg:gap-0 lg:border-l-2 lg:border-sable">
+            {sections.map(h => (
+              <li>
+                <a
+                  href={`#${h.slug}`}
+                  data-toc={h.slug}
+                  class="border-sable hover:border-riviere block rounded-full border bg-white px-3 py-1.5 font-semibold lg:-ml-0.5 lg:rounded-none lg:border-0 lg:border-l-2 lg:border-transparent lg:bg-transparent lg:py-1.5 lg:pl-4 lg:font-normal lg:hover:border-riviere lg:aria-[current=true]:border-riviere lg:aria-[current=true]:font-semibold lg:aria-[current=true]:text-riviere"
+                >
+                  {h.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )
+    }
+    <article class:list={["texte max-w-3xl", !withToc && "mx-auto"]}>
+      <Content />
+    </article>
+  </div>
+  {
+    withToc && (
+      <script is:inline>
+        // Highlights the section currently on screen in the table of contents.
+        (() => {
+          const links = [...document.querySelectorAll("[data-toc]")];
+          const titles = links.map(a => document.getElementById(a.dataset.toc)).filter(Boolean);
+          const update = () => {
+            let current = titles[0];
+            for (const t of titles) if (t.getBoundingClientRect().top < 120) current = t;
+            links.forEach(a => a.setAttribute("aria-current", String(a.dataset.toc === current?.id)));
+          };
+          addEventListener("scroll", update, { passive: true });
+          update();
+        })();
+      </script>
+    )
+  }
+</Base>

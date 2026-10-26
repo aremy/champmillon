@@ -1,0 +1,47 @@
+---
+import "@/styles/global.css";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import AlertBanner from "@/components/AlertBanner.astro";
+import { getSite } from "@/lib/content";
+
+type Props = { titre?: string; description?: string };
+const site = await getSite();
+const { titre, description = site.description } = Astro.props;
+const fullTitle = titre ? `${titre} · ${site.nom}` : `${site.nom} · ${site.slogan}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="alternate" type="application/rss+xml" title={`Actualités de ${site.nom}`} href="/rss.xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.nom} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="theme-color" content="#1f4a3d" />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body class="flex min-h-svh flex-col">
+    <a
+      href="#contenu"
+      class="bg-riviere absolute top-2 left-2 z-50 -translate-y-20 rounded-full px-4 py-2 font-semibold text-white focus:translate-y-0"
+    >
+      Aller au contenu
+    </a>
+    <AlertBanner />
+    <Header />
+    <main id="contenu" class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

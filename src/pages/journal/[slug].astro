@@ -1,0 +1,35 @@
+---
+/** Web version of a journal issue (only when the Markdown file has text below the front matter). */
+import { getCollection, render } from "astro:content";
+import Base from "@/layouts/Base.astro";
+import PageHeader from "@/components/PageHeader.astro";
+import Icon from "@/components/Icon.astro";
+import { hasWebVersion } from "@/lib/content";
+
+export async function getStaticPaths() {
+  const all = await getCollection("journal");
+  return all.filter(hasWebVersion).map(j => ({ params: { slug: j.id }, props: { j } }));
+}
+
+const { j } = Astro.props;
+const { Content } = await render(j);
+---
+
+<Base titre={`Le journal ${j.data.annee}`} description={j.data.resume}>
+  <PageHeader titre={`Le journal ${j.data.annee} : ${j.data.titre}`} description={j.data.resume} />
+  <div class="conteneur mt-8">
+    <div class="no-print mx-auto flex max-w-3xl flex-wrap gap-3">
+      {
+        j.data.pdf && (
+          <a class="bouton" href={j.data.pdf} download>
+            <Icon name="telecharger" size={18} /> Télécharger le PDF
+          </a>
+        )
+      }
+      <a class="lien self-center" href="/journal/">Toutes les éditions</a>
+    </div>
+    <article class="texte mx-auto mt-10 max-w-3xl">
+      <Content />
+    </article>
+  </div>
+</Base>

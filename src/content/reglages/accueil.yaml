@@ -1,0 +1,47 @@
+# Contenu de la page d'accueil.
+
+titre: Bienvenue à Champmillon
+texte: Un village de Charente posé sur son plateau calcaire, entre les vignes des Fins Bois et la vallée de la Charente, à quinze minutes d'Angoulême.
+photo: ../../assets/images/eglise-saint-vincent.jpg
+photo_legende: L'église romane Saint-Vincent (XIIe siècle)
+
+# Tuiles d'accès rapide sous la photo (6 conseillées).
+# Un lien vers une partie de page : /demarches/#déchets-et-collecte (voir « Sur cette page » en haut de la page).
+# Icônes possibles : mairie, document, journal, actualites, calendrier, telephone, email,
+# horloge, lieu, dechets, ecole, salle, nature, alerte, info
+acces_rapides:
+  - titre: Horaires & contact
+    texte: Joindre la mairie
+    lien: /mairie/#horaires-et-contact
+    icone: horloge
+  - titre: Démarches
+    texte: État civil, urbanisme...
+    lien: /demarches/#état-civil
+    icone: document
+  - titre: Déchets & collecte
+    texte: Jours, déchetterie
+    lien: /demarches/#déchets-et-collecte
+    icone: dechets
+  - titre: Salle des fêtes
+    texte: Réserver la salle
+    lien: /village/#la-salle-des-fêtes
+    icone: salle
+  - titre: École
+    texte: RPI avec Trois-Palis
+    lien: /village/#lécole
+    icone: ecole
+  - titre: Le journal
+    texte: L'édition de l'année
+    lien: /journal/
+    icone: journal
+
+decouvrir:
+  titre: Un patrimoine à portée de promenade
+  texte: Église romane, lavoirs du XIXe siècle, vignes des Fins Bois et bords de Charente.
+  photos:
+    - photo: ../../assets/images/paysage.jpg
+      legende: Le plateau et ses paysages
+    - photo: ../../assets/images/ecluse-de-la-liege.jpg
+      legende: L'écluse de la Liège, sur la Charente
+    - photo: ../../assets/images/vignes-automne.jpg
+      legende: Les vignes à l'automne

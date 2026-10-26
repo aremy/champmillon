@@ -1,0 +1,38 @@
+---
+/**
+ * Site-wide strip for alerts in force. The page is rebuilt every night, and
+ * a tiny script also hides an alert as soon as its end date has passed.
+ */
+import Icon from "./Icon.astro";
+import { getAlertesActives, alerteFin } from "@/lib/content";
+
+const alertes = await getAlertesActives();
+const STYLE = {
+  urgent: "bg-alerte text-white",
+  vigilance: "bg-cognac-clair text-encre",
+  info: "bg-riviere text-white",
+} as const;
+const LIBELLE = { urgent: "Alerte", vigilance: "Vigilance", info: "Information" } as const;
+---
+
+{
+  alertes.map(a => (
+    <div class:list={["no-print", STYLE[a.data.niveau]]} data-fin={alerteFin(a)} role="region" aria-label={LIBELLE[a.data.niveau]}>
+      <div class="conteneur flex items-center gap-3 py-2.5">
+        <Icon name="alerte" size={22} class="shrink-0" />
+        <p class="min-w-0 flex-1 leading-snug">
+          <strong class="font-bold">{LIBELLE[a.data.niveau]} - {a.data.titre}.</strong>
+          <span class="hidden sm:inline"> {a.data.resume}</span>
+        </p>
+        <a href={`/alertes/#${a.id}`} class="shrink-0 font-semibold whitespace-nowrap underline underline-offset-4">
+          En savoir plus
+        </a>
+      </div>
+    </div>
+  ))
+}
+<script is:inline>
+  document.querySelectorAll("[data-fin]").forEach(el => {
+    if (Date.now() > Number(el.getAttribute("data-fin"))) el.remove();
+  });
+</script>

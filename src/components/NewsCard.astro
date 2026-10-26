@@ -1,0 +1,28 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+import { formatDate } from "@/lib/content";
+
+type Props = { item: CollectionEntry<"actualites">; level?: 2 | 3 };
+const { item, level = 3 } = Astro.props;
+const { data } = item;
+const Titre = `h${level}` as "h2" | "h3";
+---
+
+<article class="carte relative flex flex-col overflow-hidden">
+  {
+    data.photo && (
+      <Image src={data.photo} alt="" widths={[400, 700]} sizes="(min-width: 768px) 360px, 100vw" class="aspect-[16/10] w-full object-cover" />
+    )
+  }
+  <div class="flex flex-1 flex-col p-5">
+    <p class="text-gris text-sm">
+      <span class="text-cognac-fonce font-semibold">{data.categorie}</span> ·
+      <time datetime={data.date.toISOString()}>{formatDate(data.date)}</time>
+    </p>
+    <Titre class="mt-2 text-xl leading-snug font-semibold">
+      <a href={`/actualites/${item.id}/`} class="after:absolute after:inset-0 hover:underline">{data.titre}</a>
+    </Titre>
+    <p class="text-gris mt-2">{data.resume}</p>
+  </div>
+</article>
